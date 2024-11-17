@@ -1,0 +1,81 @@
+<div>
+    <h2>Time Tracking Form</h2>
+    <div x-data='[DATA]' x-init="function() {
+            timeTracker.placeInitialData(this);
+                        }">
+        <form class="event-form bg-white p-6 rounded-lg shadow-lg" action="/site/[SITE_ID]/[DATA_PAGE_ID]/sitePageDataPost" method="post" id="timeForm">
+            <input type="hidden" name="_token" value="CSRF_TOKEN">
+            <input type="hidden" id="team_id" name="team_id" value="[TEAM_ID]">
+            <input type="hidden" id="return_json" name="return_json" value="true" />
+            <input type="hidden" id="site_page_data_id" name="site_page_data_id"  value="[DATA_PAGE_ID]"/>
+
+            <div class="form-group">
+                <label for="entryDate">Date:</label>
+                <input type="date" id="entryDate" name="entryDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="startTime">Start Time:</label>
+                <input type="time" id="startTime" name="startTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endTime">End Time:</label>
+                <input type="time" id="endTime" name="endTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="2" placeholder="Enter work description"></textarea>
+            </div>
+
+            <button type="submit">Add Time</button>
+        </form>
+
+        <h3>Uninvoiced Time Entries</h3>
+        <table id="timeEntriesTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                    <th>
+                        Invoice Actions<br/>
+                        <button type="button" onclick="timeTracker.invoiceSelected()" style="background: none; border: none; cursor: pointer;">
+                            <i class="material-icons teambutton">business</i> 
+                        </button>
+                        <button type="button" onclick="timeTracker.deleteSelected()" style="background: none; border: none; cursor: pointer;">
+                            <i class="material-icons teambutton">delete_forever</i>
+                        </button>
+                        <input type="checkbox" name="selectAll" onclick="timeTracker.selectAll(this)">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Time entries will be appended here -->
+            </tbody>
+        </table>
+
+        <script src="/js/timeTracker.js"></script>
+        <script>
+            // Initialize configuration with server-replaced values
+            const config = {
+                siteId: '[SITE_ID]',
+                dataPageId: '[DATA_PAGE_ID]',
+                teamId: '[TEAM_ID]'
+            };
+            
+            // Initialize TimeTracker with configuration
+            const timeTracker = new TimeTracker(config);
+            
+            document.querySelector('form').onsubmit = (e) => {
+                e.preventDefault();
+                timeTracker.submitTimeEntry();
+            };
+        </script>
+    </div>
+
+</div>
